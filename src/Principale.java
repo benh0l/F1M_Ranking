@@ -24,7 +24,7 @@ public class Principale {
         String linkImg = null;
 
         //FENETRE UTILISATEUR
-        JFrame frame = new JFrame("F1Maniacs : Classements v1.2018.0");
+        JFrame frame = new JFrame("F1Maniacs : Classements v2.2019.0");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JRadioButton bpilot = new JRadioButton("Pilotes");
@@ -156,9 +156,10 @@ public class Principale {
             String nom = sheet.getCellAt(new String("C"+i)).getTextValue();
             if(!nom.equals("")){
                 String equipe = sheet.getCellAt(new String("B"+i)).getTextValue();
-                String points = sheet.getCellAt(new String("D"+i)).getTextValue();
-                String rang = sheet.getCellAt(new String("G"+i)).getTextValue();
-                Joueur j = new Joueur(nom,equipe,Integer.parseInt(points),Integer.parseInt(rang));
+                String points = sheet.getCellAt(new String("N"+i)).getTextValue();
+                String rang = sheet.getCellAt(new String("O"+i)).getTextValue();
+                Color couleur = sheet.getCellAt(new String("A"+i)).getStyle().getBackgroundColor();
+                Joueur j = new Joueur(nom,equipe,Integer.parseInt(points),Integer.parseInt(rang),couleur);
                 joueurs.add(j);
             }
         }
@@ -269,7 +270,7 @@ public class Principale {
             if(!equipe.equals("")){
                 String points = sheet.getCellAt(new String("D"+i)).getTextValue();
                 String rang = sheet.getCellAt(new String("E"+i)).getTextValue();
-                Joueur j = new Joueur("",equipe,Integer.parseInt(points),Integer.parseInt(rang));
+                Joueur j = new Joueur("",equipe,Integer.parseInt(points),Integer.parseInt(rang),Color.WHITE);
                 joueurs.add(j);
             }
         }

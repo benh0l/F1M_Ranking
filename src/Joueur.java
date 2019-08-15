@@ -10,22 +10,24 @@ public class Joueur{
     public String nom, equipe;
     public int points, rang;
     public BufferedImage img;
+    public Color color;
 
     private String mercedesPath = "/img/Mercedes.jpg", mercedesTeamPath = "/img/team/mercedes.jpg", ferrariPath = "/img/Ferrari.jpg", ferrariTeamPath = "/img/team/ferrari.jpg", redbullpath = "/img/RedBull.jpg", redbullTeamPath = "/img/team/redbull.jpg",
     renaultPath = "/img/Renault.jpg", renaultTeamPath = "/img/team/renault.jpg", haasPath = "/img/Haas.jpg",haasTeamPath = "/img/team/haas.jpg", mclarenPath = "/img/McLaren.jpg", mclarenTeamPath = "img/team/mclaren.jpg",
     tororossoPath = "/img/ToroRosso.jpg", tororossoTeamPath = "/img/team/tororosso.jpg", sauberPath = "/img/Sauber.jpg", sauberTeamPath = "/img/team/sauber.jpg", forceindiaPath = "/img/ForceIndia.jpg", forceindiaTeamPath = "/img/team/forceindia.jpg",
     williamsPath = "/img/Williams.jpg", williamsTeamPath = "/img/team/williams.jpg",defaultPath = "/img/default.jpg";
 
-    public Joueur(String n, String e, int p, int r) throws IOException{
+    public Joueur(String n, String e, int p, int r,Color c) throws IOException{
         nom = n;
         equipe = e;
         points = p;
         rang = r;
-        this.setImg();
+        color = c;
+        this.setImg("default");
     }
 
-    public void setImg() throws IOException {
-        switch(equipe){
+    public void setImg(String s) throws IOException {
+        switch(s){
             case "Mercedes":
             case "Remplaçant Mercedes":
                 //img = ImageIO.read(new File("img/Mercedes.jpg"));

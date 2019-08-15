@@ -71,6 +71,9 @@ public class Image {
                 g2d.drawString(rangString,x+8,y+37);
             }
 
+            g2d.setColor(j.color);
+            g2d.fillRect(x+57,y+7,7,42);
+
             g2d.setColor(Color.WHITE);
             g2d.drawString(j.nom,x+70,y+37);
             g2d.setFont(policeF1);
