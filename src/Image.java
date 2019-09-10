@@ -150,24 +150,27 @@ public class Image {
             String rangString = Integer.toString(j.rang);
 
             if( rangString.length() == 1){
-                g2d.drawString(rangString,x+24,y+50);
+                g2d.drawString(rangString,x+15,y+40);
             }else{
-                g2d.drawString(rangString,x+20,y+50);
+                g2d.drawString(rangString,x+6,y+40);
             }
+
+            g2d.setColor(j.color);
+            g2d.fillRect(x+57,y+7,7,42);
 
             g2d.setColor(Color.WHITE);
             //g2d.drawString(j.equipe,x+35,y+16);
             g2d.setFont(policeF1);
-            //g2d.drawString(j.equipe,x+120,y+16);
+            g2d.drawString(j.equipe,x+120,y+37);
             g2d.setFont(policeF1Wide);
 
             String pointsString = Integer.toString(j.points);
             if(pointsString.length() == 1){
-                g2d.drawString(pointsString,x+950,y+50);
+                g2d.drawString(pointsString,x+650,y+40);
             }else if(pointsString.length() == 2){
-                g2d.drawString(pointsString,x+905,y+50);
+                g2d.drawString(pointsString,x+605,y+40);
             }else{
-                g2d.drawString(pointsString,x+860,y+50);
+                g2d.drawString(pointsString,x+560,y+40);
             }
 
             y = y + 85;

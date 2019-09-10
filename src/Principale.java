@@ -22,35 +22,60 @@ public class Principale {
     public static void main(String args[]) throws IOException {
         String linkFile = null;
         String linkImg = null;
+        final boolean[] f1f2 = {true};
 
         //FENETRE UTILISATEUR
         JFrame frame = new JFrame("F1Maniacs : Classements v2.2019.0");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        JRadioButton bf1 = new JRadioButton("F1");
+        bf1.setSize(new Dimension(100,50));
+        bf1.setBounds(150,0,100,50);
+        bf1.setSelected(true);
+        bf1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                f1f2[0] = true;
+            }
+        });
+        JRadioButton bf2 = new JRadioButton("F2");
+        bf2.setSize(new Dimension(100,50));
+        bf2.setBounds(250,0,150,50);
+        bf2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                f1f2[0] = false;
+            }
+        });
+        ButtonGroup bgF = new ButtonGroup();
+        bgF.add(bf1);
+        bgF.add(bf2);
+
+
         JRadioButton bpilot = new JRadioButton("Pilotes");
         bpilot.setSize(new Dimension(100,50));
-        bpilot.setBounds(150,0,100,50);
+        bpilot.setBounds(150,50,100,50);
         bpilot.setSelected(true);
         JRadioButton bteam = new JRadioButton("Constructeurs");
         bteam.setSize(new Dimension(100,50));
-        bteam.setBounds(250,0,150,50);
+        bteam.setBounds(250,50,150,50);
         ButtonGroup bg = new ButtonGroup();
         bg.add(bpilot);
         bg.add(bteam);
 
         JButton fichier = new JButton("Sélectionner un fichier");
         fichier.setSize(new Dimension(200, 50));
-        fichier.setBounds(275, 50, 200, 50);
+        fichier.setBounds(275, 100, 200, 50);
         JTextField status = new JTextField("");
         status.setEditable(false);
         status.setSize(new Dimension(250, 50));
-        status.setBounds(15, 50, 250, 50);
+        status.setBounds(15, 100, 250, 50);
         fichier.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jfc = new JFileChooser();
                 jfc.setApproveButtonText("Choix");
-                jfc.showOpenDialog(null);
+                //jfc.showOpenDialog(null);
                 if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     status.setText(jfc.getSelectedFile().getAbsolutePath());
                 }
@@ -59,11 +84,11 @@ public class Principale {
 
         JButton save = new JButton("Sauvegarder sous");
         save.setSize(new Dimension(200, 50));
-        save.setBounds(275, 125, 200, 50);
+        save.setBounds(275, 175, 200, 50);
         JTextField statusSave = new JTextField("");
         statusSave.setEditable(false);
         statusSave.setSize(new Dimension(250, 50));
-        statusSave.setBounds(15, 125, 250, 50);
+        statusSave.setBounds(15, 175, 250, 50);
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,7 +106,7 @@ public class Principale {
         });
 
         JLabel nbColonneGauche = new JLabel("Nombre de pilotes dans la 1ère colonne (laisser vide pour 2 colonnes équilibrées) :");
-        nbColonneGauche.setBounds(10,200,500,25);
+        nbColonneGauche.setBounds(10,250,500,25);
         JFormattedTextField integerField;
         NumberFormat integerFieldFormatter;
         integerFieldFormatter = NumberFormat.getIntegerInstance();
@@ -90,11 +115,11 @@ public class Principale {
         integerField = new JFormattedTextField(integerFieldFormatter);
         integerField.setColumns(2);
         //integerField.setSize(new Dimension(50,50));
-        integerField.setBounds(235,250,30,25);
+        integerField.setBounds(235,300,30,25);
 
         JButton run = new JButton("Créer l'image");
         run.setSize(150, 50);
-        run.setBounds(175, 300, 150, 50);
+        run.setBounds(175, 350, 150, 50);
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -108,9 +133,9 @@ public class Principale {
                             if(!nb.equals("")){
                                 cpt = Integer.parseInt(nb);
                             }
-                            Principale.creerImage(lFile, lImg, cpt);
+                            Principale.creerImage(lFile, lImg, cpt, f1f2[0]);
                         }else{
-                            Principale.creerImageConstructeur(lFile,lImg);
+                            Principale.creerImageConstructeur(lFile,lImg,f1f2[0]);
                         }
                         JOptionPane.showMessageDialog(frame,"Image créée avec succès!");
                         //System.exit(0);
@@ -124,6 +149,8 @@ public class Principale {
 
 
         frame.setLayout(null);
+        frame.add(bf1);
+        frame.add(bf2);
         frame.add(bpilot);
         frame.add(bteam);
         frame.add(status);
@@ -135,29 +162,38 @@ public class Principale {
         frame.add(run);
 
         frame.pack();
-        frame.setSize(new Dimension(500, 400));
+        frame.setSize(new Dimension(500, 500));
         //frame.setIconImage(new ImageIcon("/img/logo.png").getImage());
         frame.setVisible(true);
         Image im = new Image();
         im.creerIcone(frame);
     }
 
-    public static void creerImage(String lien1, String lien2,int cpt) throws IOException{
+    public static void creerImage(String lien1, String lien2,int cpt,boolean f1) throws IOException{
         int width = 1920;
         int height = 1080;
         //TRAITEMENT DES DONNEES
         //File f = new File("src/tableur/tableurActuel.ods");
         File f = new File(lien1);
         Sheet sheet = SpreadSheet.createFromFile(f).getSheet(0);
+        if(!f1)
+            sheet = SpreadSheet.createFromFile(f).getSheet(2);
 
         ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
-
+        String points = "";
+        String rang = "";
         for(int i = 3;i<41;i++){
             String nom = sheet.getCellAt(new String("C"+i)).getTextValue();
             if(!nom.equals("")){
                 String equipe = sheet.getCellAt(new String("B"+i)).getTextValue();
-                String points = sheet.getCellAt(new String("N"+i)).getTextValue();
-                String rang = sheet.getCellAt(new String("O"+i)).getTextValue();
+                if(f1) {
+                    points = sheet.getCellAt(new String("N" + i)).getTextValue();
+                    rang = sheet.getCellAt(new String("O"+i)).getTextValue();
+                }else {
+                    points = sheet.getCellAt(new String("X" + i)).getTextValue();
+                    rang = sheet.getCellAt(new String("Y" + i)).getTextValue();
+                }
+
                 Color couleur = sheet.getCellAt(new String("A"+i)).getStyle().getBackgroundColor();
                 Joueur j = new Joueur(nom,equipe,Integer.parseInt(points),Integer.parseInt(rang),couleur);
                 joueurs.add(j);
@@ -256,21 +292,31 @@ public class Principale {
         */
     }
 
-    public static void creerImageConstructeur(String lien1, String lien2) throws IOException{
+    public static void creerImageConstructeur(String lien1, String lien2,boolean f1) throws IOException{
         int width = 1920;
         int height = 1080;
         //TRAITEMENT DES DONNEES
         File f = new File(lien1);
         Sheet sheet = SpreadSheet.createFromFile(f).getSheet(1);
+        if(!f1)
+            sheet = SpreadSheet.createFromFile(f).getSheet(3);
 
         ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
-
-        for(int i = 3;i<13;i++){
+        String points = "";
+        String rang = "";
+        for(int i = 3;i<23;i = i+2){
             String equipe = sheet.getCellAt(new String("C"+i)).getTextValue();
+            System.out.println(equipe);
             if(!equipe.equals("")){
-                String points = sheet.getCellAt(new String("D"+i)).getTextValue();
-                String rang = sheet.getCellAt(new String("E"+i)).getTextValue();
-                Joueur j = new Joueur("",equipe,Integer.parseInt(points),Integer.parseInt(rang),Color.WHITE);
+                if(f1) {
+                    points = sheet.getCellAt(new String("N" + i)).getTextValue();
+                    rang = sheet.getCellAt(new String("O" + i)).getTextValue();
+                }else {
+                    points = sheet.getCellAt(new String("Y" + i)).getTextValue();
+                    rang = sheet.getCellAt(new String("Z" + i)).getTextValue();
+                }
+                Color couleur = sheet.getCellAt(new String("B"+i)).getStyle().getBackgroundColor();
+                Joueur j = new Joueur(equipe,equipe,Integer.parseInt(points),Integer.parseInt(rang),couleur);
                 joueurs.add(j);
             }
         }
